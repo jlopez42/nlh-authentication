@@ -1,6 +1,6 @@
 use db_projects;
 
-create table users (
+CREATE TABLE IF NOT EXISTS users (
   id bigint primary key auto_increment,
   username varchar(255) not null unique,
   email varchar(255) not null unique,
@@ -8,7 +8,7 @@ create table users (
   created_at timestamp default current_timestamp
 );
 
-create table projects (
+create table if not exists projects (
   id bigint primary key auto_increment,
   name varchar(255) not null,
   description text,
@@ -18,7 +18,18 @@ create table projects (
   updated_at timestamp default current_timestamp on update current_timestamp
 );
 
-create table documentation (
+create table if not exists project_details (
+  id bigint primary key auto_increment,
+  project_id bigint,
+  description text,
+  start_date date,
+  end_date date,
+  created_at timestamp default current_timestamp,
+  updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+
+create table if not exists documentation (
   id bigint primary key auto_increment,
   project_id bigint,
   title varchar(255) not null,
@@ -28,12 +39,12 @@ create table documentation (
   foreign key (project_id) references projects (id) on delete cascade
 );
 
-create table roles (
+create table if not exists roles (
   id bigint primary key auto_increment,
   name varchar(255) not null unique
 );
 
-create table user_roles (
+create table if not exists user_roles (
   user_id bigint,
   role_id bigint,
   primary key (user_id, role_id),
@@ -41,7 +52,7 @@ create table user_roles (
   foreign key (role_id) references roles (id) on delete cascade
 );
 
-create table project_assignments (
+create table if not exists project_assignments (
   user_id bigint,
   project_id bigint,
   role_id bigint,
@@ -51,7 +62,7 @@ create table project_assignments (
   foreign key (role_id) references roles (id)
 );
 
-create table budgets (
+create table if not exists budgets (
   id bigint primary key auto_increment,
   project_id bigint,
   amount decimal not null,
@@ -60,7 +71,7 @@ create table budgets (
   foreign key (project_id) references projects (id) on delete cascade
 );
 
-create table access_tokens (
+create table if not exists access_tokens (
   id bigint primary key auto_increment,
   user_id bigint,
   token varchar(255) not null unique,
